@@ -1,0 +1,45 @@
+cask_args appdir: '/Applications'
+
+tap 'homebrew/bundle'
+
+# Tools
+brew 'ag'
+brew 'cheat'
+brew 'cloc'
+brew 'coreutils'
+brew 'ctags'
+brew 'git'
+brew 'ispell'
+brew 'jq'
+brew 'shellcheck'
+brew 'tree'
+brew 'unrar'
+brew 'protobuf'
+brew 'htop'
+brew 'pkg-config'
+
+# Desktop apps
+cask '1password'
+cask 'anki'
+cask 'docker'
+cask 'emacs'
+cask 'intellij-idea-ce'
+cask 'moom'
+
+# Databases
+brew 'postgresql'
+brew 'redis'
+
+# Languages
+brew 'nvm'
+brew 'python'
+cask 'java8'
+
+# Quick Look
+cask 'qlcolorcode'
+cask 'qlimagesize'
+cask 'qlmarkdown'
+cask 'qlprettypatch'
+cask 'qlstephen'
+cask 'quicklook-csv'
+cask 'quicklook-json'
