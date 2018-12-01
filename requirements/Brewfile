@@ -1,6 +1,7 @@
 cask_args appdir: '/Applications'
 
 tap 'homebrew/bundle'
+tap 'caskroom/versions'
 
 # Tools
 brew 'ag'
@@ -33,7 +34,7 @@ brew 'redis'
 # Languages
 brew 'nvm'
 brew 'python'
-cask 'java8'
+cask 'java'
 
 # Quick Look
 cask 'qlcolorcode'
