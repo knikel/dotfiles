@@ -1,46 +1,48 @@
-cask_args appdir: '/Applications'
+cask_args appdir: "/Applications"
 
-tap 'homebrew/bundle'
-tap 'caskroom/versions'
-
-# Tools
-brew 'ag'
-brew 'cheat'
-brew 'cloc'
-brew 'coreutils'
-brew 'ctags'
-brew 'git'
-brew 'ispell'
-brew 'jq'
-brew 'shellcheck'
-brew 'tree'
-brew 'unrar'
-brew 'protobuf'
-brew 'htop'
-brew 'pkg-config'
-
-# Desktop apps
-cask '1password'
-cask 'anki'
-cask 'docker'
-cask 'emacs'
-cask 'intellij-idea-ce'
-cask 'moom'
-
-# Databases
-brew 'postgresql'
-brew 'redis'
-
-# Languages
-brew 'nvm'
-brew 'python'
-cask 'java'
-
-# Quick Look
-cask 'qlcolorcode'
-cask 'qlimagesize'
-cask 'qlmarkdown'
-cask 'qlprettypatch'
-cask 'qlstephen'
-cask 'quicklook-csv'
-cask 'quicklook-json'
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-versions"
+tap "homebrew/core"
+brew "cheat"
+brew "cloc"
+brew "coreutils"
+brew "ctags"
+brew "git"
+brew "hledger"
+brew "htop"
+brew "ispell"
+brew "jq"
+brew "nvm"
+brew "pkg-config"
+brew "postgresql"
+brew "protobuf"
+brew "pyenv"
+brew "redis"
+brew "rename"
+brew "shellcheck"
+brew "the_silver_searcher"
+brew "tmux"
+brew "tree"
+brew "unrar"
+brew "wget"
+cask "1password"
+cask "anki"
+cask "caffeine"
+cask "docker"
+cask "emacs"
+cask "google-chrome"
+cask "handbrake"
+cask "intellij-idea-ce"
+cask "iterm2"
+cask "java"
+cask "moom"
+cask "qlcolorcode"
+cask "qlimagesize"
+cask "qlmarkdown"
+cask "qlprettypatch"
+cask "qlstephen"
+cask "quicklook-csv"
+cask "quicklook-json"
+cask "tunnelblick"
+cask "xquartz"
