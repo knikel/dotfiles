@@ -83,6 +83,12 @@
     (setq indent-tabs-mode nil))
   (add-hook 'lisp-interaction-mode-hook #'indent-spaces-mode))
 
+(use-package es-mode
+  :ensure t
+  :init
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.es$\\'" . es-mode))))
+
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -95,6 +101,8 @@
   :after (ledger-mode flycheck))
 
 (use-package format-all :ensure t)
+
+(use-package graphql-mode :ensure t)
 
 (use-package gruvbox-theme :ensure t)
 
