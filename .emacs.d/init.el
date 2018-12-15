@@ -43,12 +43,6 @@
             (run-with-idle-timer 0.1 nil
                                  (lambda (fg) (set-face-foreground 'mode-line fg))
                                  orig-fg))))
-  (set-face-attribute 'default
-    nil
-    :family "PragmataPro Mono"
-    :height 125
-    :weight 'normal
-    :width 'normal)
   (defalias 'yes-or-no-p 'y-or-n-p))
 
 ;;;
@@ -102,7 +96,17 @@
 
 (use-package graphql-mode :ensure t)
 
-(use-package gruvbox-theme :ensure t)
+(use-package github-modern-theme
+  :ensure t
+  :config
+  (set-face-attribute 'default
+    nil
+    :family "Go Mono"
+    :height 120
+    :weight 'normal
+    :width 'normal)
+  ;;(load-theme 'tao-yang 'no-confirm)
+  (load-theme 'github-modern 'no-confirm))
 
 (use-package git-gutter
   :ensure t
