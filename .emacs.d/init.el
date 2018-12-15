@@ -43,6 +43,12 @@
             (run-with-idle-timer 0.1 nil
                                  (lambda (fg) (set-face-foreground 'mode-line fg))
                                  orig-fg))))
+  (set-face-attribute 'default
+    nil
+    :family "PragmataPro Mono"
+    :height 125
+    :weight 'normal
+    :width 'normal)
   (defalias 'yes-or-no-p 'y-or-n-p))
 
 ;;;
@@ -58,6 +64,11 @@
   :defer t
   :config
   (setq dired-listing-switches "-alh"))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
 (use-package eldoc
   :ensure nil
@@ -83,8 +94,15 @@
   :ensure t
   :after (ledger-mode flycheck))
 
-(use-package format-all
-  :ensure t)
+(use-package format-all :ensure t)
+
+(use-package gruvbox-theme :ensure t)
+
+(use-package git-gutter
+  :ensure t
+  :demand t
+  :config
+  (global-git-gutter-mode +1))
 
 (use-package guru-mode
   :ensure t
@@ -139,6 +157,7 @@
   (setq org-sync-dir "~/Dropbox/orgfiles")
   (defun org-dir (path) (expand-file-name path org-sync-dir))
   :config
+  (setq org-cycle-separator-lines 1)
   (setq org-agenda-files
 	(mapcar 'org-dir
 		'("inbox.org"
@@ -168,6 +187,12 @@
   (global-set-key "\C-cb" 'org-switchb)
 
   (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))))
+
+(use-package prog-mode
+  :ensure nil
+  :config
+  (progn
+    (add-hook 'prog-mode-hook 'company-mode)))
 
 (use-package projectile
   :ensure t
