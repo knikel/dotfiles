@@ -85,9 +85,7 @@
 
 (use-package es-mode
   :ensure t
-  :init
-  (progn
-    (add-to-list 'auto-mode-alist '("\\.es$\\'" . es-mode))))
+  :mode "\\.es$\\'")
 
 (use-package exec-path-from-shell
   :ensure t
@@ -137,11 +135,11 @@
                           'magit-insert-stashes
                           'append))
 
-(use-package make-mode
+(use-package makefile-mode
   :ensure nil
+  :mode "\\Makefile\\'"
   :init
   (progn
-    (add-to-list 'auto-mode-alist '("\\Makefile\\'" . makefile-mode))
     (font-lock-add-keywords
      'makefile-mode
      '(("define" . font-lock-keyword-face)
