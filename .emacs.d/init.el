@@ -202,7 +202,9 @@
   :ensure nil
   :config
   (progn
-    (add-hook 'prog-mode-hook 'company-mode)))
+    (add-hook 'prog-mode-hook 'company-mode)
+    (global-prettify-symbols-mode 1)
+    (electric-pair-mode 1)))
 
 (use-package projectile
   :ensure t
@@ -225,6 +227,12 @@
     (add-hook 'sh-mode-hook 'flycheck-mode)
     (add-hook 'sh-mode-hook 'linum-mode)
     (add-hook 'sh-mode-hook 'company-mode)))
+
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)))
 
 (use-package yasnippet
   :ensure t
