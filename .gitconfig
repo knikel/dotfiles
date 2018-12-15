@@ -1,0 +1,9 @@
+[include]
+  path = ~/.gitconfig.local
+[core]
+  excludesfile = ~/.gitignore.global
+[user]
+  email = kamil@fmap.io
+  name = Kamil Nikel
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/

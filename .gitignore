@@ -1,0 +1,11 @@
+# Self
+.extra
+
+# Emacs
+.emacs.d/auto-save-list
+.emacs.d/bookmarks
+.emacs.d/custom.el
+.emacs.d/elpa
+.emacs.d/history
+.emacs.d/ido.last
+.emacs.d/projectile*
