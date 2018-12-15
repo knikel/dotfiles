@@ -183,9 +183,9 @@
                                 ("n" "Note (for currently clocked task)" item
                                  (clock) "  - %U %?" :empty-lines 1)))
 
-  (setq org-refile-targets '((org-dir "master.org" :maxlevel . 3)
-			     (org-dir "someday.org" :level . 1)
-			     (org-dir "tickler.org" :maxlevel .2)))
+  (setq org-refile-targets `((,(org-dir "master.org") :maxlevel . 3)
+			     (,(org-dir "someday.org") :level . 1)
+			     (,(org-dir "tickler.org" ) :maxlevel . 2)))
 
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
