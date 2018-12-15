@@ -175,14 +175,14 @@
 		  "tickler.org"
 		  "habits.org")))
 
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline (org-dir "inbox.org") "Inbox")
+  (setq org-capture-templates `(("t" "Todo [inbox]" entry
+                                 (file+headline ,(org-dir "inbox.org") "Inbox")
                                  "* TODO %i%?")
                                 ("T" "Tickler" entry
-                                 (file+headline (org-dir "tickler.org") "Tickler")
+                                 (file+headline ,(org-dir "tickler.org") "Tickler")
                                  "* %i%? \n %U")
                                 ("j" "Journal Entry" entry
-                                 (file+datetree (org-dir "journal.org") "Journal")
+                                 (file+datetree ,(org-dir "journal.org") "Journal")
                                  "* %U %?" :empty-lines 1)
                                 ("n" "Note (for currently clocked task)" item
                                  (clock) "  - %U %?" :empty-lines 1)))
