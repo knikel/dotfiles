@@ -96,7 +96,7 @@
 
 (use-package graphql-mode :ensure t)
 
-(use-package github-modern-theme
+(use-package intellij-theme
   :ensure t
   :config
   (set-face-attribute 'default
@@ -104,9 +104,7 @@
     :family "Go Mono"
     :height 120
     :weight 'normal
-    :width 'normal)
-  ;;(load-theme 'tao-yang 'no-confirm)
-  (load-theme 'github-modern 'no-confirm))
+    :width 'normal))
 
 (use-package git-gutter
   :ensure t
