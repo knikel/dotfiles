@@ -106,11 +106,11 @@
     :weight 'normal
     :width 'normal))
 
-(use-package git-gutter
+(use-package diff-hl
   :ensure t
   :demand t
   :config
-  (global-git-gutter-mode +1))
+  (global-diff-hl-mode +1))
 
 (use-package guru-mode
   :ensure t
