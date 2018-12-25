@@ -68,6 +68,16 @@
   :ensure nil
   :config (global-eldoc-mode))
 
+(use-package elfeed
+  :ensure t
+  :demand t
+  :config
+  (global-set-key (kbd "C-x w") 'elfeed)
+  (defun yt (ch) (concat "https://www.youtube.com/feeds/videos.xml?channel_id=" ch))
+  (setq elfeed-feeds
+    `())
+  (setq-default elfeed-search-filter "@7-days-ago +unread"))
+
 (use-package elisp-mode
   :ensure nil
   :config
