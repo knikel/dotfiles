@@ -111,8 +111,8 @@
   :config
   (set-face-attribute 'default
     nil
-    :family "Go Mono"
-    :height 120
+    :family "M+ 1mn"
+    :height 130
     :weight 'normal
     :width 'normal))
 
@@ -120,6 +120,7 @@
   :ensure t
   :demand t
   :config
+  (setq diff-hl-draw-borders nil)
   (global-diff-hl-mode +1))
 
 (use-package guru-mode
