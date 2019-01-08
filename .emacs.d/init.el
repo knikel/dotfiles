@@ -106,9 +106,10 @@
 
 (use-package graphql-mode :ensure t)
 
-(use-package intellij-theme
+(use-package seoul256-theme
   :ensure t
   :config
+  (load-theme 'seoul256 t)
   (set-face-attribute 'default
     nil
     :family "M+ 1mn"
