@@ -34,6 +34,9 @@
   (setq inhibit-startup-screen t)
   (setq initial-buffer-choice t)
   (setq initial-scratch-message "")
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq create-lockfiles nil)
   (setq load-prefer-newer t)
   (global-auto-revert-mode t)
   (setq ring-bell-function
@@ -49,9 +52,16 @@
 ;; Packages, modes and scope customizations
 ;;;
 
-(use-package better-defaults :ensure t)
+(use-package avy :ensure t)
 
 (use-package company :ensure t)
+
+(use-package deft
+  :ensure t
+  :bind ("<f8>" . deft)
+  :init (setq deft-directory "~/Dropbox/notes"
+              deft-extensions '("md")
+              deft-new-file-format "%Y%m%dT%H%M"))
 
 (use-package dired
   :ensure nil
@@ -75,7 +85,20 @@
   (global-set-key (kbd "C-x w") 'elfeed)
   (defun yt (ch) (concat "https://www.youtube.com/feeds/videos.xml?channel_id=" ch))
   (setq elfeed-feeds
-    `())
+    `("http://macwright.org/atom.xml"
+      "http://bitemyapp.com/rss.xml"
+      "http://degoes.net/feed.xml"
+      "https://typeclasses.com/rss.xml"
+      "http://calnewport.com/blog/feed?fmt=xml"
+      "http://feeds.feedburner.com/HighScalability"
+      ,(yt "UC5KbWmC93TBhinPLqh5j2kg")
+      ,(yt "UCEBcDOjv-bhAmLavY71RMHA")
+      ,(yt "UCEtohQeDqMSebi2yvLMUItg")
+      ,(yt "UCJS9pqu9BzkAMNTmzNMNhvg")
+      ,(yt "UCUgxpaK7ySR-z6AXA5-uDuw")
+      ,(yt "UCmFs_X-O2fmq7Is1zMlxF1w")
+      ,(yt "UCtmoqK-8MPiq4Vs_X2deDbg")
+      ,(yt "UCuaSMQWO4ZG4EMSXRL0fldA")))
   (setq-default elfeed-search-filter "@7-days-ago +unread"))
 
 (use-package elisp-mode
@@ -106,14 +129,33 @@
 
 (use-package graphql-mode :ensure t)
 
-(use-package seoul256-theme
+(use-package ample-theme
+  :init (progn (load-theme 'ample t t)
+               (load-theme 'ample-flat t t)
+               (load-theme 'ample-light t t)
+               (enable-theme 'ample))
+  :defer t
   :ensure t
+  :init
+  (defun my-dpi ()
+    (let* ((attrs (car (display-monitor-attributes-list)))
+           (size (assoc 'mm-size attrs))
+           (sizex (cadr size))
+           (res (cdr (assoc 'geometry attrs)))
+           (resx (- (caddr res) (car res)))
+           dpi)
+      (catch 'exit
+        (unless sizex
+          (throw 'exit 10))
+        (when (> sizex 1000)
+          (throw 'exit 10))
+        (* (/ (float resx) sizex) 25.4))))
   :config
-  (load-theme 'seoul256 t)
   (set-face-attribute 'default
     nil
-    :family "M+ 1mn"
-    :height 130
+    :family "M+ 1m"
+    ;;:family "Noto Sans Mono"
+    :height (cond ((< (my-dpi) 110) 140) (t 130))
     :weight 'normal
     :width 'normal))
 
@@ -136,7 +178,8 @@
   :config
   (setq ledger-binary-path "hledger"
         ledger-mode-should-check-version nil
-        ledger-highlight-xact-under-point nil))
+        ledger-highlight-xact-under-point nil)
+  :custom (ledger-clear-whole-transactions t))
 
 (use-package magit
   :ensure t
@@ -171,17 +214,28 @@
     (add-hook 'makefile-mode-hook 'linum-mode)
     (add-hook 'makefile-mode-hook 'makefile-mode-setup)))
 
+(use-package visual-fill-column
+  :ensure t)
+
+(use-package markdown-mode
+  :after (visual-fill-column-mode)
+  :ensure t
+  :config
+  :hook ((markdown-mode . visual-fill-column-mode)))
+
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 (use-package org
   :ensure org-plus-contrib
   :init
   (setq org-sync-dir "~/Dropbox/orgfiles")
+  (setq org-hide-emphasis-markers t)
   (defun org-dir (path) (expand-file-name path org-sync-dir))
   :config
   (setq org-cycle-separator-lines 1)
   (setq org-agenda-files
 	(mapcar 'org-dir
 		'("inbox.org"
-		  "master.org"
+		  "todo.org"
 		  "tickler.org"
 		  "habits.org")))
 
@@ -197,7 +251,7 @@
                                 ("n" "Note (for currently clocked task)" item
                                  (clock) "  - %U %?" :empty-lines 1)))
 
-  (setq org-refile-targets `((,(org-dir "master.org") :maxlevel . 3)
+  (setq org-refile-targets `((,(org-dir "todo.org") :maxlevel . 1)
 			     (,(org-dir "someday.org") :level . 1)
 			     (,(org-dir "tickler.org" ) :maxlevel . 2)))
 
@@ -206,13 +260,20 @@
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-cb" 'org-switchb)
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  (dolist (face '(org-level-1
+                  org-level-2
+                  org-level-3
+                  org-level-4
+                  org-level-5))
+    (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
 
 (use-package prog-mode
   :ensure nil
   :config
   (progn
     (add-hook 'prog-mode-hook 'company-mode)
+    (add-to-list 'focus-out-hook (lambda () (save-some-buffers t nil)))
     (global-prettify-symbols-mode 1)
     (electric-pair-mode 1)))
 
@@ -229,6 +290,11 @@
 
 (use-package rainbow-delimiters :ensure t)
 
+(use-package server
+  :ensure nil
+  :config
+  (server-mode))
+
 (use-package sh-mode
   :ensure nil
   :defer t
@@ -242,6 +308,7 @@
   :ensure t
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
+         (typescript-mode . flycheck-mode)
          (typescript-mode . tide-hl-identifier-mode)))
 
 (use-package yasnippet
