@@ -6,5 +6,3 @@ dotfiles:
 		echo "linking $$file"; \
 		ln -sfn $$file $(HOME)/$$f; \
 	done;
-
-	ln -sfn $(CURDIR)/kitty.conf $(HOME)/.config/kitty/kitty.conf
