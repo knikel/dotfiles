@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Emacs
+export EDITOR="emacsclient"
+export VISUAL="emacsclient"
+
+# Longer history
+export HISTSIZE=50000;
+export HISTFILESIZE=$HISTSIZE;
+export HISTCONTROL=ignoredups;
+
+# Ignore some commands from history
+export HISTIGNORE=" *:ls:cd:cd -:pwd:exit:date:* --help:* -h:man *:history*";
+
+# Set LANG and encoding
+export LANG="en_US.UTF-8";
+export LC_ALL="en_US.UTF-8";
+
+# man adjustments
+export MANWIDTH=80
+export MANPAGER="less -X";
+
+# Node
+export NVM_DIR="$HOME/.nvm"
+
+# Java
+export JAVA_HOME=$(/usr/libexec/java_home -v 11.0.1)
