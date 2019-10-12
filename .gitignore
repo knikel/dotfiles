@@ -9,3 +9,4 @@
 .emacs.d/history
 .emacs.d/ido.last
 .emacs.d/projectile*
+.emacs.d/session*

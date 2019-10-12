@@ -1,12 +1,20 @@
-;; Package manager
+;;; emacs.d -- Yup, emacs.d
 
+;;; Commentary:
+;; - Sane defaults
+;; - Quality of life
+;; - Elisp
+;; - lsp-mode setup for TypeScript, Python, Rust
+;; - Other modes
+
+;;; Code:
 (require 'package)
 
 (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.milkbox.net/packages/")
+      '(
+        ("melpa" . "http://melpa.org/packages/")
         ("melpa-stable" . "http://stable.melpa.org/packages/")
-	("org" . "http://orgmode.org/elpa/")))
+        ("org-elpa" . "https://orgmode.org/elpa/")))
 
 (package-initialize)
 
@@ -16,9 +24,8 @@
 
 (require 'use-package)
 
-;;;
-;; Startup config
-;;;
+;;; Sane defaults
+;;
 
 (progn
   (setq-default indent-tabs-mode nil)
@@ -49,19 +56,22 @@
   (defalias 'yes-or-no-p 'y-or-n-p))
 
 ;;;
-;; Packages, modes and scope customizations
+;; Quality of life
 ;;;
 
-(use-package avy :ensure t)
-
-(use-package company :ensure t)
-
-(use-package deft
+(use-package company
   :ensure t
-  :bind ("<f8>" . deft)
-  :init (setq deft-directory "~/Dropbox/notes"
-              deft-extensions '("md")
-              deft-new-file-format "%Y%m%dT%H%M"))
+  :hook (prog-mode . company-mode)
+  :config (setq company-tooltip-align-annotations t)
+          (setq company-minimum-prefix-length 1))
+
+(use-package diff-hl
+  :ensure t
+  :demand t
+  :config
+  (setq diff-hl-draw-borders nil)
+  (global-diff-hl-mode +1)
+  (diff-hl-margin-mode))
 
 (use-package dired
   :ensure nil
@@ -69,72 +79,7 @@
   :config
   (setq dired-listing-switches "-alh"))
 
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
-
-(use-package eldoc
-  :ensure nil
-  :config (global-eldoc-mode))
-
-(use-package elfeed
-  :ensure t
-  :demand t
-  :config
-  (global-set-key (kbd "C-x w") 'elfeed)
-  (defun yt (ch) (concat "https://www.youtube.com/feeds/videos.xml?channel_id=" ch))
-  (setq elfeed-feeds
-    `("http://macwright.org/atom.xml"
-      "http://bitemyapp.com/rss.xml"
-      "http://degoes.net/feed.xml"
-      "https://typeclasses.com/rss.xml"
-      "http://calnewport.com/blog/feed?fmt=xml"
-      "http://feeds.feedburner.com/HighScalability"
-      ,(yt "UC5KbWmC93TBhinPLqh5j2kg")
-      ,(yt "UCEBcDOjv-bhAmLavY71RMHA")
-      ,(yt "UCEtohQeDqMSebi2yvLMUItg")
-      ,(yt "UCJS9pqu9BzkAMNTmzNMNhvg")
-      ,(yt "UCUgxpaK7ySR-z6AXA5-uDuw")
-      ,(yt "UCmFs_X-O2fmq7Is1zMlxF1w")
-      ,(yt "UCtmoqK-8MPiq4Vs_X2deDbg")
-      ,(yt "UCuaSMQWO4ZG4EMSXRL0fldA")))
-  (setq-default elfeed-search-filter "@7-days-ago +unread"))
-
-(use-package elisp-mode
-  :ensure nil
-  :config
-  (add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'reveal-mode)
-  (defun indent-spaces-mode ()
-    (setq indent-tabs-mode nil))
-  (add-hook 'lisp-interaction-mode-hook #'indent-spaces-mode))
-
-(use-package es-mode
-  :ensure t
-  :mode "\\.es$\\'")
-
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize))
-
-(use-package flycheck :ensure t)
-
-(use-package flycheck-ledger
-  :ensure t
-  :after (ledger-mode flycheck))
-
-(use-package format-all :ensure t)
-
-(use-package graphql-mode :ensure t)
-
-(use-package ample-theme
-  :init (progn (load-theme 'ample t t)
-               (load-theme 'ample-flat t t)
-               (load-theme 'ample-light t t)
-               (enable-theme 'ample))
-  :defer t
+(use-package doom-themes
   :ensure t
   :init
   (defun my-dpi ()
@@ -153,24 +98,156 @@
   :config
   (set-face-attribute 'default
     nil
-    :family "M+ 1m"
-    ;;:family "Noto Sans Mono"
-    :height (cond ((< (my-dpi) 110) 140) (t 130))
+    :family "Cascadia Code"
+    :height (cond ((< (my-dpi) 110) 95) (t 110))
     :weight 'normal
-    :width 'normal))
+    :width 'normal)
+  (load-theme 'doom-molokai t))
 
-(use-package diff-hl
+(use-package editorconfig
   :ensure t
-  :demand t
   :config
-  (setq diff-hl-draw-borders nil)
-  (global-diff-hl-mode +1))
+  (editorconfig-mode 1))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
+(use-package feebleline
+  :ensure t
+  :config
+  (setq feebleline-msg-functions
+        '((feebleline-line-number         :post "" :fmt "%5s")
+          (feebleline-column-number       :pre ":" :fmt "%-2s")
+          (feebleline-file-directory      :face feebleline-dir-face :post "")
+          (feebleline-file-or-buffer-name :face font-lock-keyword-face :post "")
+          (feebleline-file-modified-star  :face font-lock-warning-face :post "")
+          (feebleline-git-branch          :face feebleline-git-face :pre " : ")
+          (feebleline-project-name        :align right)))
+  (feebleline-mode 1))
+
+(use-package flycheck
+  :ensure t
+  :hook (prog-mode . flycheck-mode))
+
+(use-package format-all :ensure t)
 
 (use-package guru-mode
   :ensure t
   :demand t
   :config
   (guru-global-mode +1))
+
+(use-package projectile
+  :ensure t
+  :demand t
+  :init
+  (setq projectile-git-submodule-command "")
+  :config
+  (add-to-list 'projectile-globally-ignored-directories "node_modules")
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode))
+
+(use-package magit
+  :ensure t
+  :defer t
+  :bind (("C-x g"   . magit-status)
+         ("C-x M-g" . magit-dispatch))
+  :config
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-modules
+                          'magit-insert-stashes
+                          'append))
+
+(use-package visual-fill-column
+  :ensure t)
+
+(use-package server
+  :ensure nil
+  :config
+  (server-mode))
+
+(use-package yasnippet
+  :ensure t
+  :config
+  (setq mode-require-final-newline nil)
+  (setq yas-snippet-dirs
+        '("~/.emacs.d/snippets"))
+  (yas-global-mode +1))
+
+;;; lsp-mode configuration
+;;
+
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :config (require 'lsp-clients)
+  :hook
+  (python-mode . lsp)
+  (rust-mode . lsp)
+  (typescript-mode . lsp))
+
+(use-package lsp-ui
+  :ensure t
+  :defer t
+  :commands lsp-ui-mode
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package company-lsp
+  :ensure t
+  :defer t
+  :commands company-lsp
+  :after lsp-mode
+  :config
+  (push 'company-lsp company-backends))
+
+;; TypeScript
+(use-package typescript-mode
+  :ensure t
+  :mode ("\\.ts\\'" . typescript-mode)
+  :config
+  (setq company-minimum-prefix-length 2))
+
+;; Rust
+
+(use-package flycheck-rust
+  :ensure t
+  :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(use-package rust-mode
+  :ensure t
+  :mode ("\\.rs\\'" . rust-mode))
+
+(use-package cargo
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode))
+
+(use-package toml-mode
+  :ensure t)
+
+;;; Other modes and configuration
+
+(use-package eldoc
+  :ensure nil
+  :config (global-eldoc-mode))
+
+(use-package elisp-mode
+  :ensure nil
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
+  (add-hook 'emacs-lisp-mode-hook 'reveal-mode)
+  (defun indent-spaces-mode ()
+    (setq indent-tabs-mode nil))
+  (add-hook 'lisp-interaction-mode-hook #'indent-spaces-mode))
+
+(use-package es-mode
+  :ensure t
+  :mode "\\.es$\\'")
+
+(use-package graphql-mode
+  :ensure t)
 
 (use-package ledger-mode
   :ensure t
@@ -180,17 +257,6 @@
         ledger-mode-should-check-version nil
         ledger-highlight-xact-under-point nil)
   :custom (ledger-clear-whole-transactions t))
-
-(use-package magit
-  :ensure t
-  :defer t
-  :bind (("C-x g"   . magit-status)
-         ("C-x M-g" . magit-dispatch-popup))
-  :config
-  (magit-add-section-hook 'magit-status-sections-hook
-                          'magit-insert-modules
-                          'magit-insert-stashes
-                          'append))
 
 (use-package makefile-mode
   :ensure nil
@@ -214,59 +280,11 @@
     (add-hook 'makefile-mode-hook 'linum-mode)
     (add-hook 'makefile-mode-hook 'makefile-mode-setup)))
 
-(use-package visual-fill-column
-  :ensure t)
-
 (use-package markdown-mode
   :after (visual-fill-column-mode)
   :ensure t
   :config
   :hook ((markdown-mode . visual-fill-column-mode)))
-
-(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-(use-package org
-  :ensure org-plus-contrib
-  :init
-  (setq org-sync-dir "~/Dropbox/orgfiles")
-  (setq org-hide-emphasis-markers t)
-  (defun org-dir (path) (expand-file-name path org-sync-dir))
-  :config
-  (setq org-cycle-separator-lines 1)
-  (setq org-agenda-files
-	(mapcar 'org-dir
-		'("inbox.org"
-		  "todo.org"
-		  "tickler.org"
-		  "habits.org")))
-
-  (setq org-capture-templates `(("t" "Todo [inbox]" entry
-                                 (file+headline ,(org-dir "inbox.org") "Inbox")
-                                 "* TODO %i%?")
-                                ("T" "Tickler" entry
-                                 (file+headline ,(org-dir "tickler.org") "Tickler")
-                                 "* %i%? \n %U")
-                                ("j" "Journal Entry" entry
-                                 (file+datetree ,(org-dir "journal.org") "Journal")
-                                 "* %U %?" :empty-lines 1)
-                                ("n" "Note (for currently clocked task)" item
-                                 (clock) "  - %U %?" :empty-lines 1)))
-
-  (setq org-refile-targets `((,(org-dir "todo.org") :maxlevel . 1)
-			     (,(org-dir "someday.org") :level . 1)
-			     (,(org-dir "tickler.org" ) :maxlevel . 2)))
-
-  (global-set-key "\C-cl" 'org-store-link)
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-cb" 'org-switchb)
-
-  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
-  (dolist (face '(org-level-1
-                  org-level-2
-                  org-level-3
-                  org-level-4
-                  org-level-5))
-    (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
 
 (use-package prog-mode
   :ensure nil
@@ -277,24 +295,6 @@
     (global-prettify-symbols-mode 1)
     (electric-pair-mode 1)))
 
-(use-package projectile
-  :ensure t
-  :demand t
-  :init
-  (setq projectile-git-submodule-command "")
-  :config
-  (add-to-list 'projectile-globally-ignored-directories "node_modules")
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode))
-
-(use-package rainbow-delimiters :ensure t)
-
-(use-package server
-  :ensure nil
-  :config
-  (server-mode))
-
 (use-package sh-mode
   :ensure nil
   :defer t
@@ -304,17 +304,4 @@
     (add-hook 'sh-mode-hook 'linum-mode)
     (add-hook 'sh-mode-hook 'company-mode)))
 
-(use-package tide
-  :ensure t
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . flycheck-mode)
-         (typescript-mode . tide-hl-identifier-mode)))
 
-(use-package yasnippet
-  :ensure t
-  :config
-  (setq mode-require-final-newline nil)
-  (setq yas-snippet-dirs
-        '("~/.emacs.d/snippets"))
-  (yas-global-mode +1))
