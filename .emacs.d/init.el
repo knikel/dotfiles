@@ -99,10 +99,10 @@
   (set-face-attribute 'default
     nil
     :family "Cascadia Code"
-    :height (cond ((< (my-dpi) 110) 95) (t 110))
+    :height (cond ((< (my-dpi) 110) 125) (t 125))
     :weight 'normal
     :width 'normal)
-  (load-theme 'doom-molokai t))
+  (load-theme 'doom-solarized-light t))
 
 (use-package editorconfig
   :ensure t
@@ -304,4 +304,13 @@
     (add-hook 'sh-mode-hook 'linum-mode)
     (add-hook 'sh-mode-hook 'company-mode)))
 
+(defvar current-time-format "%H:%M %p"
+  "Format of date to insert with `insert-current-time' func.
+Note the weekly scope of the command's precision.")
 
+(defun insert-current-time ()
+  "Insert the current time (1-week scope) into the current buffer."
+  (interactive)
+  (insert (format-time-string current-time-format (current-time))))
+
+(global-set-key "\C-x\C-t" 'insert-current-time)
