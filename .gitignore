@@ -10,3 +10,6 @@
 .emacs.d/ido.last
 .emacs.d/projectile*
 .emacs.d/session*
+.emacs.d/shell
+.emacs.d/transient
+.emacs.d/.lsp-session*
