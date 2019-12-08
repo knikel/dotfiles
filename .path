@@ -10,12 +10,3 @@ export PATH=/usr/local/opt/make/libexec/gnubin:${PATH}
 export MANPATH=/usr/local/opt/make/libexec/gnuman:${MANPATH}
 export PATH=/usr/local/opt/findutils/libexec/gnubin:${PATH}
 export MANPATH=/usr/local/opt/findutils/libexec/gnuman:${MANPATH}
-
-# Haskell/Stack
-#export PATH="$HOME/.local/bin:$PATH"
-
-# Node
-#export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-# Python
-export PATH=/usr/local/opt/python/libexec/bin:${PATH}
