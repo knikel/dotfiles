@@ -92,6 +92,7 @@ node_modules_local/
 node_modules
 places
 *.es
+.nvmrc
 
 ##
 #

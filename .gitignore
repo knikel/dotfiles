@@ -1,5 +1,6 @@
 # Self
 .extra
+.env_mapillary
 
 # Emacs
 .emacs.d/auto-save-list
