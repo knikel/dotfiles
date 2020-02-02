@@ -98,9 +98,9 @@
   :config
   (set-face-attribute 'default
     nil
-    :family "Cascadia Code"
-    :height (cond ((< (my-dpi) 110) 125) (t 125))
-    :weight 'normal
+    :family "Iosevka Term Slab"
+    :height 125
+    :weight 'regular
     :width 'normal)
   (load-theme 'doom-solarized-light t))
 
@@ -113,19 +113,6 @@
   :ensure t
   :config
   (exec-path-from-shell-initialize))
-
-(use-package feebleline
-  :ensure t
-  :config
-  (setq feebleline-msg-functions
-        '((feebleline-line-number         :post "" :fmt "%5s")
-          (feebleline-column-number       :pre ":" :fmt "%-2s")
-          (feebleline-file-directory      :face feebleline-dir-face :post "")
-          (feebleline-file-or-buffer-name :face font-lock-keyword-face :post "")
-          (feebleline-file-modified-star  :face font-lock-warning-face :post "")
-          (feebleline-git-branch          :face feebleline-git-face :pre " : ")
-          (feebleline-project-name        :align right)))
-  (feebleline-mode 1))
 
 (use-package flycheck
   :ensure t
@@ -202,6 +189,13 @@
   :after lsp-mode
   :config
   (push 'company-lsp company-backends))
+
+;; Python
+(use-package lsp-python-ms
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-python-ms)
+                          (lsp))))
 
 ;; TypeScript
 (use-package typescript-mode
@@ -314,3 +308,13 @@ Note the weekly scope of the command's precision.")
   (insert (format-time-string current-time-format (current-time))))
 
 (global-set-key "\C-x\C-t" 'insert-current-time)
+
+(use-package doom-modeline
+      :ensure t
+      :hook (after-init . doom-modeline-mode))
+
+(use-package yaml-mode
+      :ensure t)
+
+(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
