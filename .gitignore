@@ -1,6 +1,7 @@
 # Self
 .extra
 .env_mapillary
+*.lock.json
 
 # Emacs
 .emacs.d/auto-save-list
@@ -14,3 +15,4 @@
 .emacs.d/shell
 .emacs.d/transient
 .emacs.d/.lsp-session*
+.emacs.d/mspyls
