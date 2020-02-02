@@ -4,3 +4,4 @@ alias dl="cd ~/Downloads"
 alias h="history"
 alias jsok="python -c \"import sys,json;json.loads(sys.stdin.read());print('OK')\""
 alias ls="command ls --color" # coreutils
+alias cdpret="git diff --staged --name-only | grep '.*\.ts' | xargs prettier --config .prettierrc --write"
